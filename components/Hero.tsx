@@ -61,7 +61,7 @@ export default function Hero() {
           <div className="relative aspect-[3/4] overflow-hidden rounded-3xl shadow-[0_10px_40px_rgba(0,0,0,0.15)]">
             <Image
               src="/images/PSU_LOGO_TEMP.PNG"
-              alt="Steve Joseph, President of the Dominica Public Service Union"
+              alt="DPSU Logo"
               fill
               sizes="(min-width: 768px) 24rem, 90vw"
               className="object-cover"
