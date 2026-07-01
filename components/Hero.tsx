@@ -60,7 +60,7 @@ export default function Hero() {
           <div className="pointer-events-none absolute -inset-4 rounded-[2rem] bg-blue-400/25 blur-2xl" />
           <div className="relative aspect-[3/4] overflow-hidden rounded-3xl shadow-[0_10px_40px_rgba(0,0,0,0.15)]">
             <Image
-              src="/images/PSU_LOGO_TEMP.PNG"
+              src="/images/PSU_LOGO_TEMP.png"
               alt="DPSU Logo"
               fill
               sizes="(min-width: 768px) 24rem, 90vw"
