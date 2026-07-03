@@ -2,6 +2,7 @@
 
 import { motion } from "framer-motion";
 import Image from "next/image";
+import { Spotlight } from "./ui/spotlight";
 
 export default function Hero() {
   return (
@@ -9,13 +10,9 @@ export default function Hero() {
       {/* Grid pattern background */}
       <div className="absolute inset-0 bg-grid-pattern" />
 
-      {/* Spotlight glow */}
-      <motion.div
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 0.5 }}
-        transition={{ duration: 1.5 }}
-        className="pointer-events-none absolute -top-40 left-1/2 h-[45rem] w-[70rem] -translate-x-1/2 rounded-full bg-blue-400/40 blur-[120px]"
-      />
+      {/* Spotlight beams */}
+      <Spotlight className="-top-40 left-0 md:left-20" fill="#0c2d52" />
+      <Spotlight className="-top-56 right-0 rotate-12 md:right-10" fill="#c99a3b" />
 
       {/* Content */}
       <div className="relative z-10 mx-auto grid max-w-6xl grid-cols-1 items-center gap-16 px-6 md:grid-cols-2">
@@ -36,7 +33,7 @@ export default function Hero() {
               href="#contact"
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
-              className="rounded-lg bg-blue-600 px-6 py-3 text-white shadow-[0_0_30px_rgba(37,99,235,0.3)] transition hover:bg-blue-700"
+              className="rounded-lg bg-navy px-6 py-3 text-white shadow-[0_0_30px_rgba(12,45,82,0.35)] transition hover:bg-navy-dark"
             >
               Get Involved
             </motion.a>
@@ -57,7 +54,7 @@ export default function Hero() {
           transition={{ duration: 1, delay: 0.2 }}
           className="relative mx-auto w-full max-w-sm"
         >
-          <div className="pointer-events-none absolute -inset-4 rounded-[2rem] bg-blue-400/25 blur-2xl" />
+          <div className="pointer-events-none absolute -inset-4 rounded-[2rem] bg-navy-light/25 blur-2xl" />
           <div className="relative aspect-[3/4] overflow-hidden rounded-3xl shadow-[0_10px_40px_rgba(0,0,0,0.15)]">
             <Image
               src="/images/PSU_LOGO_TEMP.png"

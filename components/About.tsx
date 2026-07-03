@@ -38,7 +38,7 @@ export default function About() {
             transition={{ duration: 0.8 }}
             className="rounded-3xl border border-black/10 bg-neutral-50 p-8 shadow-sm md:col-span-2 md:row-span-2"
           >
-            <p className="mb-4 text-sm font-medium uppercase tracking-wide text-blue-600">
+            <p className="mb-4 text-sm font-medium uppercase tracking-wide text-navy">
               2026 &ndash; 2028 Theme
             </p>
             <p className="text-lg leading-relaxed text-neutral-600">
@@ -58,7 +58,7 @@ export default function About() {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ duration: 0.8, delay: 0.15 * (i + 1) }}
-              className="rounded-3xl border border-black/10 bg-neutral-50 p-6 shadow-sm transition hover:border-blue-400/50"
+              className="rounded-3xl border border-black/10 bg-neutral-50 p-6 shadow-sm transition hover:border-gold/50"
             >
               <h3 className="mb-2 text-xl font-semibold">{pillar.title}</h3>
               <p className="text-sm text-neutral-500">{pillar.desc}</p>
@@ -77,7 +77,7 @@ export default function About() {
               {values.map((value) => (
                 <span
                   key={value}
-                  className="rounded-full border border-blue-200 bg-blue-50 px-3 py-1 text-sm text-blue-700"
+                  className="rounded-full border border-gold/40 bg-gold/10 px-3 py-1 text-sm text-navy"
                 >
                   {value}
                 </span>

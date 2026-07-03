@@ -20,7 +20,7 @@ export default function News() {
           transition={{ duration: 0.8 }}
           className="mb-12 text-center text-4xl font-bold"
         >
-          Testimonials
+          Latest News
         </motion.h2>
       </div>
       <InfiniteMovingCards items={newsItems} speedSeconds={35} />

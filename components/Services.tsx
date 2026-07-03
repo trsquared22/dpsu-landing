@@ -3,6 +3,15 @@
 import { useState } from "react";
 import { motion } from "framer-motion";
 import Image from "next/image";
+import {
+  Scale,
+  Handshake,
+  GraduationCap,
+  HeartHandshake,
+  Banknote,
+  BookOpen,
+  type LucideIcon,
+} from "lucide-react";
 import { CardContainer, CardBody, CardItem } from "./ui/3d-card";
 
 interface Service {
@@ -10,10 +19,20 @@ interface Service {
   desc: string;
   image?: string;
   imagePosition?: "top" | "center" | "bottom";
+  icon?: LucideIcon; // used when there's no dedicated photo yet
   info?: string;
   infoList?: { label: string; text: string }[];
   infoOutro?: string;
 }
+
+const icons = {
+  legal: Scale,
+  bargaining: Handshake,
+  training: GraduationCap,
+  community: HeartHandshake,
+  cash: Banknote,
+  education: BookOpen,
+};
 
 const objectPositionClass = {
   top: "object-top",
@@ -25,25 +44,25 @@ const services: Service[] = [
   {
     title: "Legal Representation",
     desc: "Support in workplace disputes and grievances.",
-    image: "/images/pic.png",
+    icon: icons.legal,
     info: "Placeholder info: how to request representation and what's covered will go here.",
   },
   {
     title: "Collective Bargaining",
     desc: "Stronger negotiation power for fair wages and benefits.",
-    image: "/images/pic.png",
+    icon: icons.bargaining,
     info: "Placeholder info: current bargaining priorities and timelines will go here.",
   },
   {
     title: "Training & Development",
     desc: "Workshops and programs to enhance skills.",
-    image: "/images/pic.png",
+    icon: icons.training,
     info: "Placeholder info: upcoming workshops and how to sign up will go here.",
   },
   {
     title: "Community Initiatives",
     desc: "Outreach programs to uplift society.",
-    image: "/images/pic.png",
+    icon: icons.community,
     info: "Placeholder info: active outreach programs and how to get involved will go here.",
   },
   {
@@ -64,14 +83,14 @@ const services: Service[] = [
   },
   {
     title: "Instant Kash",
-    desc: "DPSU offers a soft loans to it's members.",
-    image: "/images/pic.png",
+    desc: "DPSU offers soft loans to its members.",
+    icon: icons.cash,
     info: "Placeholder info: loan limits, terms, and how to apply will go here.",
   },
   {
     title: "Education",
-    desc: "As Partners with the Cipriani Collage of Labour and Co-Operative studies in Trinidad and Tobago, The DPSU officers scholarships to its members who wishes to study in any related feild being offered.",
-    image: "/images/pic.png",
+    desc: "In partnership with the Cipriani College of Labour and Co-operative Studies in Trinidad and Tobago, DPSU offers scholarships to members who wish to study in a related field.",
+    icon: icons.education,
     info: "Placeholder info: scholarship eligibility and application steps will go here.",
   },
 ];
@@ -83,9 +102,9 @@ function ServiceCard({ service, index }: { service: Service; index: number }) {
     <CardContainer className="w-full" containerClassName="py-0">
       <CardBody
         onClick={() => setIsRevealed((prev) => !prev)}
-        className="group relative w-full cursor-pointer overflow-hidden rounded-3xl border border-black/10 bg-white p-8 shadow-sm transition hover:border-blue-400/50 hover:shadow-md"
+        className="group relative w-full cursor-pointer overflow-hidden rounded-3xl border border-black/10 bg-white p-8 shadow-sm transition hover:border-gold/50 hover:shadow-md"
       >
-        <CardItem translateZ={40} className="pointer-events-none absolute -right-10 -top-10 h-32 w-32 rounded-full bg-blue-200/40 blur-3xl transition group-hover:bg-blue-300/40" />
+        <CardItem translateZ={40} className="pointer-events-none absolute -right-10 -top-10 h-32 w-32 rounded-full bg-gold/20 blur-3xl transition group-hover:bg-gold/30" />
 
         {service.image && (
           <div className="relative -mx-8 -mt-8 mb-6 h-40 overflow-hidden bg-white">
@@ -99,9 +118,15 @@ function ServiceCard({ service, index }: { service: Service; index: number }) {
           </div>
         )}
 
+        {!service.image && service.icon && (
+          <div className="relative -mx-8 -mt-8 mb-6 flex h-40 items-center justify-center bg-gradient-to-br from-navy to-navy-light">
+            <service.icon strokeWidth={1.2} className="h-16 w-16 text-gold" />
+          </div>
+        )}
+
         <CardItem
           translateZ={60}
-          className="relative mb-4 flex h-10 w-10 items-center justify-center rounded-xl border border-blue-200 bg-blue-50 text-lg font-semibold text-blue-600"
+          className="relative mb-4 flex h-10 w-10 items-center justify-center rounded-xl border border-gold/40 bg-gold/10 text-lg font-semibold text-navy"
         >
           {index + 1}
         </CardItem>
@@ -114,12 +139,12 @@ function ServiceCard({ service, index }: { service: Service; index: number }) {
 
         {service.info && (
           <div
-            className={`absolute inset-0 z-20 flex translate-y-4 flex-col rounded-3xl bg-blue-700 p-6 text-white opacity-0 transition duration-300 ease-out group-hover:translate-y-0 group-hover:opacity-100 ${
+            className={`absolute inset-0 z-20 flex translate-y-4 flex-col rounded-3xl bg-navy p-6 text-white opacity-0 transition duration-300 ease-out group-hover:translate-y-0 group-hover:opacity-100 ${
               isRevealed ? "translate-y-0 opacity-100" : ""
             }`}
           >
             <h4 className="mb-2 shrink-0 text-lg font-semibold">{service.title}</h4>
-            <div className="min-h-0 flex-1 overflow-y-auto pr-1 text-sm leading-relaxed text-blue-50">
+            <div className="min-h-0 flex-1 overflow-y-auto pr-1 text-sm leading-relaxed text-white/85">
               <p className={service.infoList ? "mb-3" : ""}>{service.info}</p>
               {service.infoList && (
                 <ul className="mb-3 space-y-1.5">

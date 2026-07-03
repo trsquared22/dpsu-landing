@@ -6,7 +6,7 @@ import { motion } from "framer-motion";
 import { emptyMembershipForm, type MembershipFormData } from "@/lib/membership";
 
 const inputClass =
-  "w-full rounded-lg border border-black/10 bg-white px-4 py-2.5 text-neutral-900 placeholder:text-neutral-400 focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500/20";
+  "w-full rounded-lg border border-black/10 bg-white px-4 py-2.5 text-neutral-900 placeholder:text-neutral-400 focus:border-navy focus:outline-none focus:ring-2 focus:ring-navy/20";
 const labelClass = "mb-1.5 block text-sm font-medium text-neutral-700";
 
 function Field({
@@ -80,7 +80,7 @@ export default function MembershipPage() {
             </p>
             <Link
               href="/"
-              className="inline-block rounded-lg bg-blue-600 px-8 py-3 text-white shadow-[0_0_30px_rgba(37,99,235,0.3)] transition hover:bg-blue-700"
+              className="inline-block rounded-lg bg-navy px-8 py-3 text-white shadow-[0_0_30px_rgba(12,45,82,0.35)] transition hover:bg-navy-dark"
             >
               Back to home
             </Link>
@@ -94,7 +94,7 @@ export default function MembershipPage() {
     <main className="relative overflow-hidden bg-neutral-50 py-32 text-neutral-900">
       <div className="absolute inset-0 bg-grid-pattern" />
       <div className="relative mx-auto max-w-3xl px-6">
-        <Link href="/" className="mb-6 inline-block text-sm text-blue-600 hover:underline">
+        <Link href="/" className="mb-6 inline-block text-sm text-navy hover:underline">
           &larr; Back to home
         </Link>
 
@@ -108,7 +108,8 @@ export default function MembershipPage() {
           <section className="rounded-2xl border border-black/10 bg-white p-8 shadow-sm">
             <h2 className="mb-6 text-xl font-semibold">Membership Application</h2>
 
-            <div className="mb-6 flex gap-6">
+            <fieldset className="mb-6 flex gap-6">
+              <legend className={labelClass}>Gender</legend>
               <label className="flex items-center gap-2 text-sm text-neutral-700">
                 <input
                   type="radio"
@@ -131,7 +132,7 @@ export default function MembershipPage() {
                 />
                 Man
               </label>
-            </div>
+            </fieldset>
 
             <div className="mb-4 grid gap-4 sm:grid-cols-3">
               <Field label="First name">
@@ -140,11 +141,12 @@ export default function MembershipPage() {
                   name="firstName"
                   value={formData.firstName}
                   onChange={handleChange}
+                  autoComplete="given-name"
                   required
                 />
               </Field>
               <Field label="Middle name">
-                <input className={inputClass} name="middleName" value={formData.middleName} onChange={handleChange} />
+                <input className={inputClass} name="middleName" value={formData.middleName} onChange={handleChange} autoComplete="additional-name" />
               </Field>
               <Field label="Last name">
                 <input
@@ -152,6 +154,7 @@ export default function MembershipPage() {
                   name="lastName"
                   value={formData.lastName}
                   onChange={handleChange}
+                  autoComplete="family-name"
                   required
                 />
               </Field>
@@ -165,6 +168,7 @@ export default function MembershipPage() {
                   value={formData.addressLine1}
                   onChange={handleChange}
                   placeholder="Street address"
+                  autoComplete="address-line1"
                   required
                 />
               </Field>
@@ -174,6 +178,7 @@ export default function MembershipPage() {
                 value={formData.addressLine2}
                 onChange={handleChange}
                 placeholder="Village / town (optional)"
+                autoComplete="address-line2"
               />
               <input
                 className={inputClass}
@@ -186,10 +191,10 @@ export default function MembershipPage() {
 
             <div className="mb-4 grid gap-4 sm:grid-cols-3">
               <Field label="Telephone (home)">
-                <input className={inputClass} name="phoneHome" value={formData.phoneHome} onChange={handleChange} />
+                <input className={inputClass} name="phoneHome" value={formData.phoneHome} onChange={handleChange} type="tel" autoComplete="tel" />
               </Field>
               <Field label="Telephone (work)">
-                <input className={inputClass} name="phoneWork" value={formData.phoneWork} onChange={handleChange} />
+                <input className={inputClass} name="phoneWork" value={formData.phoneWork} onChange={handleChange} type="tel" autoComplete="tel" />
               </Field>
               <Field label="Telephone (cell)">
                 <input
@@ -197,6 +202,8 @@ export default function MembershipPage() {
                   name="phoneCell"
                   value={formData.phoneCell}
                   onChange={handleChange}
+                  type="tel"
+                  autoComplete="tel"
                   required
                 />
               </Field>
@@ -210,6 +217,7 @@ export default function MembershipPage() {
                   name="dateOfBirth"
                   value={formData.dateOfBirth}
                   onChange={handleChange}
+                  autoComplete="bday"
                   required
                 />
               </Field>
@@ -232,6 +240,7 @@ export default function MembershipPage() {
                 value={formData.email}
                 onChange={handleChange}
                 placeholder="you@example.com"
+                autoComplete="email"
                 required
               />
             </Field>
@@ -301,7 +310,8 @@ export default function MembershipPage() {
             </Field>
 
             <p className="mb-4 text-sm text-neutral-600">
-              I hereby authorize you to deduct the sum of twenty dollars ($25.00) or any amount that may be decided
+              I hereby authorize you to deduct the sum of twenty-five dollars ($25.00) or any amount that may be
+              decided
               from time to time by the general membership, from my salary beginning the month below and every month
               thereafter to be paid to the Dominica Public Service Union as subscription fees.
             </p>
@@ -354,7 +364,7 @@ export default function MembershipPage() {
             disabled={status === "submitting"}
             whileHover={{ scale: status === "submitting" ? 1 : 1.05 }}
             whileTap={{ scale: status === "submitting" ? 1 : 0.95 }}
-            className="w-full rounded-lg bg-blue-600 px-8 py-3 text-white shadow-[0_0_30px_rgba(37,99,235,0.3)] transition hover:bg-blue-700 disabled:cursor-not-allowed disabled:opacity-60 sm:w-auto"
+            className="w-full rounded-lg bg-navy px-8 py-3 text-white shadow-[0_0_30px_rgba(12,45,82,0.35)] transition hover:bg-navy-dark disabled:cursor-not-allowed disabled:opacity-60 sm:w-auto"
           >
             {status === "submitting" ? "Submitting..." : "Submit Application"}
           </motion.button>

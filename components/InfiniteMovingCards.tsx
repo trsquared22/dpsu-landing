@@ -27,7 +27,7 @@ export default function InfiniteMovingCards({
             key={`${item.title}-${i}`}
             className="w-[320px] shrink-0 rounded-3xl border border-black/10 bg-neutral-50 p-6 shadow-sm"
           >
-            <p className="mb-4 text-3xl text-blue-500/40">&ldquo;</p>
+            <p className="mb-4 text-3xl text-navy/30">&ldquo;</p>
             <p className="mb-4 text-neutral-600">{item.desc}</p>
             <p className="text-sm font-semibold text-neutral-900">{item.title}</p>
           </li>
