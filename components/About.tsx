@@ -2,20 +2,24 @@
 
 import { motion } from "framer-motion";
 
-const pillars = [
-  {
-    title: "Investing in Ourselves",
-    desc: "Building the skills, knowledge, and confidence public servants need to grow in their careers and their union.",
-  },
-  {
-    title: "Organizing for Workers' Rights",
-    desc: "Standing together at the bargaining table so every member's voice carries real weight.",
-  },
-];
+interface AboutPillar {
+  title: string;
+  desc: string;
+}
 
-const values = ["Integrity", "Unity", "Fairness"];
+interface AboutProps {
+  themeLabel?: string;
+  themeText?: string;
+  pillars?: AboutPillar[];
+  values?: string[];
+}
 
-export default function About() {
+export default function About({
+  themeLabel = "Our Theme",
+  themeText,
+  pillars = [],
+  values = [],
+}: AboutProps) {
   return (
     <section id="about" className="relative bg-white py-24 text-neutral-900">
       <div className="absolute inset-0 bg-grid-pattern" />
@@ -38,17 +42,12 @@ export default function About() {
             transition={{ duration: 0.8 }}
             className="rounded-3xl border border-black/10 bg-neutral-50 p-8 shadow-sm md:col-span-2 md:row-span-2"
           >
-            <p className="mb-4 text-sm font-medium uppercase tracking-wide text-navy">
-              2026 &ndash; 2028 Theme
+            <p className="mb-4 text-sm font-medium uppercase tracking-wide text-forest">
+              {themeLabel}
             </p>
-            <p className="text-lg leading-relaxed text-neutral-600">
-              The Dominica Public Service Union (DPSU) 2026-2028 under the theme
-              &ldquo;Investing in Ourselves, Organizing for Workers Rights and
-              Benefits&rdquo; is dedicated to protecting the rights of public
-              servants, promoting fairness, and fostering unity. We stand as a
-              voice for workers, ensuring their welfare and professional
-              development.
-            </p>
+            {themeText && (
+              <p className="text-lg leading-relaxed text-neutral-600">{themeText}</p>
+            )}
           </motion.div>
 
           {pillars.map((pillar, i) => (
@@ -77,7 +76,7 @@ export default function About() {
               {values.map((value) => (
                 <span
                   key={value}
-                  className="rounded-full border border-gold/40 bg-gold/10 px-3 py-1 text-sm text-navy"
+                  className="rounded-full border border-gold/40 bg-gold/10 px-3 py-1 text-sm text-forest"
                 >
                   {value}
                 </span>

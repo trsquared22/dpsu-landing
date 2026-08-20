@@ -3,13 +3,12 @@
 import { motion } from "framer-motion";
 import InfiniteMovingCards from "./InfiniteMovingCards";
 
-const newsItems = [
-  { title: "Union Meeting - July 2026", desc: "Join us for updates on negotiations and upcoming initiatives." },
-  { title: "Training Workshop", desc: "Professional development sessions scheduled for August." },
-  { title: "Community Outreach", desc: "DPSU launches new programs to support local communities." },
-];
+interface NewsItem {
+  title: string;
+  desc: string;
+}
 
-export default function News() {
+export default function News({ items }: { items: NewsItem[] }) {
   return (
     <section id="news" className="relative bg-white py-24 text-neutral-900">
       <div className="mx-auto max-w-6xl px-6">
@@ -23,7 +22,7 @@ export default function News() {
           Latest News
         </motion.h2>
       </div>
-      <InfiniteMovingCards items={newsItems} speedSeconds={35} />
+      <InfiniteMovingCards items={items} speedSeconds={35} />
     </section>
   );
 }

@@ -1,8 +1,9 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import Image from "next/image";
+import { apiVersion, projectId } from "@/sanity/env";
 
 const links = [
   { href: "#about", label: "About" },
@@ -11,8 +12,37 @@ const links = [
   { href: "#contact", label: "Contact" },
 ];
 
+// True only if the browser already holds a signed-in Sanity session
+// (shared across sanity.io, same cookie Studio itself uses). Keeps the
+// Studio link out of the nav for ordinary site visitors.
+function useHasSanitySession() {
+  const [hasSession, setHasSession] = useState(false);
+
+  useEffect(() => {
+    let cancelled = false;
+    fetch(`https://${projectId}.api.sanity.io/v${apiVersion}/users/me`, {
+      credentials: "include",
+    })
+      .then((res) => (res.ok ? res.json() : null))
+      // Unauthenticated requests get a 200 with an empty body, not a 401 -
+      // only a response with an actual user id means someone is signed in.
+      .then((user: { id?: string } | null) => {
+        if (!cancelled) setHasSession(Boolean(user?.id));
+      })
+      .catch(() => {
+        if (!cancelled) setHasSession(false);
+      });
+    return () => {
+      cancelled = true;
+    };
+  }, []);
+
+  return hasSession;
+}
+
 export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
+  const hasSanitySession = useHasSanitySession();
 
   return (
     <>
@@ -44,11 +74,21 @@ export default function Navbar() {
           <a
             key={link.href}
             href={link.href}
-            className="text-sm text-neutral-600 transition-colors hover:text-navy"
+            className="text-sm text-neutral-600 transition-colors hover:text-forest"
           >
             {link.label}
           </a>
         ))}
+        {hasSanitySession && (
+          <a
+            href="/studio"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="rounded-full bg-forest px-4 py-1.5 text-sm text-white transition-colors hover:bg-forest-dark"
+          >
+            Studio
+          </a>
+        )}
       </motion.nav>
 
       {/* Mobile menu toggle */}
@@ -63,7 +103,7 @@ export default function Navbar() {
         transition={{ duration: 0.6 }}
         className="fixed right-6 top-5 z-[100] flex h-12 w-12 items-center justify-center rounded-full border border-black/10 bg-white/70 shadow-[0_2px_20px_rgba(0,0,0,0.08)] backdrop-blur-md md:hidden"
       >
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.75} className="h-5 w-5 text-navy">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.75} className="h-5 w-5 text-forest">
           {isOpen ? (
             <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
           ) : (
@@ -88,11 +128,22 @@ export default function Navbar() {
                 key={link.href}
                 href={link.href}
                 onClick={() => setIsOpen(false)}
-                className="rounded-lg px-3 py-2 text-sm text-neutral-600 transition-colors hover:bg-navy/5 hover:text-navy"
+                className="rounded-lg px-3 py-2 text-sm text-neutral-600 transition-colors hover:bg-forest/5 hover:text-forest"
               >
                 {link.label}
               </a>
             ))}
+            {hasSanitySession && (
+              <a
+                href="/studio"
+                target="_blank"
+                rel="noopener noreferrer"
+                onClick={() => setIsOpen(false)}
+                className="mt-1 rounded-lg bg-forest px-3 py-2 text-center text-sm text-white transition-colors hover:bg-forest-dark"
+              >
+                Studio
+              </a>
+            )}
           </motion.nav>
         )}
       </AnimatePresence>

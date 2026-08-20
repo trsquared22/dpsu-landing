@@ -11,7 +11,7 @@ export default function Hero() {
       <div className="absolute inset-0 bg-grid-pattern" />
 
       {/* Spotlight beams */}
-      <Spotlight className="-top-40 left-0 md:left-20" fill="#0c2d52" />
+      <Spotlight className="-top-40 left-0 md:left-20" fill="#1b4332" />
       <Spotlight className="-top-56 right-0 rotate-12 md:right-10" fill="#c99a3b" />
 
       {/* Content */}
@@ -33,7 +33,7 @@ export default function Hero() {
               href="#contact"
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
-              className="rounded-lg bg-navy px-6 py-3 text-white shadow-[0_0_30px_rgba(12,45,82,0.35)] transition hover:bg-navy-dark"
+              className="rounded-lg bg-forest px-6 py-3 text-white shadow-[0_0_30px_rgba(27,67,50,0.35)] transition hover:bg-forest-dark"
             >
               Get Involved
             </motion.a>
@@ -54,7 +54,7 @@ export default function Hero() {
           transition={{ duration: 1, delay: 0.2 }}
           className="relative mx-auto w-full max-w-sm"
         >
-          <div className="pointer-events-none absolute -inset-4 rounded-[2rem] bg-navy-light/25 blur-2xl" />
+          <div className="pointer-events-none absolute -inset-4 rounded-[2rem] bg-forest-light/25 blur-2xl" />
           <div className="relative aspect-[3/4] overflow-hidden rounded-3xl shadow-[0_10px_40px_rgba(0,0,0,0.15)]">
             <Image
               src="/images/PSU_LOGO_TEMP.png"

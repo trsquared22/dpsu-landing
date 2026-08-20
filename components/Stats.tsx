@@ -2,21 +2,16 @@
 
 import { motion } from "framer-motion";
 
-// TODO: replace these placeholder figures with DPSU's real, current membership numbers before launch.
-const memberships = [
-  { name: "Government Establishments", members: 3200 },
-  { name: "Public Works Corporation", members: 480 },
-  { name: "Dominica Air & Sea Ports Authority", members: 410 },
-  { name: "Dominica Water and Sewerage Company", members: 260 },
-  { name: "Flow Dominica", members: 190 },
-  { name: "Solid Waste", members: 140 },
-];
+interface MembershipEntry {
+  name: string;
+  members: number;
+}
 
-export default function Stats() {
+export default function Stats({ memberships }: { memberships: MembershipEntry[] }) {
   const total = memberships.reduce((sum, entry) => sum + entry.members, 0);
 
   return (
-    <section className="relative overflow-hidden bg-navy py-20 text-white">
+    <section className="relative overflow-hidden bg-forest py-20 text-white">
       <div className="absolute inset-0 bg-grid-pattern opacity-10" />
       <div className="relative mx-auto max-w-3xl px-6">
         <motion.h2

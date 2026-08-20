@@ -10,7 +10,6 @@ import {
   HeartHandshake,
   Banknote,
   BookOpen,
-  type LucideIcon,
 } from "lucide-react";
 import { CardContainer, CardBody, CardItem } from "./ui/3d-card";
 
@@ -19,7 +18,7 @@ interface Service {
   desc: string;
   image?: string;
   imagePosition?: "top" | "center" | "bottom";
-  icon?: LucideIcon; // used when there's no dedicated photo yet
+  icon?: string; // key into `icons` below; used when there's no dedicated photo yet
   info?: string;
   infoList?: { label: string; text: string }[];
   infoOutro?: string;
@@ -39,61 +38,6 @@ const objectPositionClass = {
   center: "object-center",
   bottom: "object-bottom",
 } as const;
-
-const services: Service[] = [
-  {
-    title: "Legal Representation",
-    desc: "Support in workplace disputes and grievances.",
-    icon: icons.legal,
-    info: "Placeholder info: how to request representation and what's covered will go here.",
-  },
-  {
-    title: "Collective Bargaining",
-    desc: "Stronger negotiation power for fair wages and benefits.",
-    icon: icons.bargaining,
-    info: "Placeholder info: current bargaining priorities and timelines will go here.",
-  },
-  {
-    title: "Training & Development",
-    desc: "Workshops and programs to enhance skills.",
-    icon: icons.training,
-    info: "Placeholder info: upcoming workshops and how to sign up will go here.",
-  },
-  {
-    title: "Community Initiatives",
-    desc: "Outreach programs to uplift society.",
-    icon: icons.community,
-    info: "Placeholder info: active outreach programs and how to get involved will go here.",
-  },
-  {
-    title: "Insurance Services",
-    desc: "As Partners with the Nagico Insurance Group, DPSU Offers a great health insurance package for it's members.",
-    image: "/images/PSU_NAGICO.jpg",
-    imagePosition: "top",
-    info: "The Dominica Public Service Union (DPSU) partners with Nagico Insurance, a well‑established institution with decades of experience, to provide members with a comprehensive Group Health Scheme. This is one of the most significant benefits negotiated by the DPSU, offering wide‑ranging coverage that includes:",
-    infoList: [
-      { label: "Hospitalization", text: "Inpatient care, surgery, and recovery costs" },
-      { label: "Outpatient Services", text: "Doctor visits, diagnostics, and minor procedures" },
-      { label: "Prescription Drugs", text: "Partial or full reimbursement for approved medications" },
-      { label: "Maternity Benefits", text: "Coverage for prenatal, delivery, and postnatal care" },
-      { label: "Overseas Treatment", text: "Limited coverage for procedures unavailable in Dominica" },
-      { label: "Family Coverage", text: "Dependents may be added to the plan" },
-    ],
-    infoOutro: "Membership benefits under this scheme remain valid for the lifetime of the applicant or member.",
-  },
-  {
-    title: "Instant Kash",
-    desc: "DPSU offers soft loans to its members.",
-    icon: icons.cash,
-    info: "Placeholder info: loan limits, terms, and how to apply will go here.",
-  },
-  {
-    title: "Education",
-    desc: "In partnership with the Cipriani College of Labour and Co-operative Studies in Trinidad and Tobago, DPSU offers scholarships to members who wish to study in a related field.",
-    icon: icons.education,
-    info: "Placeholder info: scholarship eligibility and application steps will go here.",
-  },
-];
 
 function ServiceCard({ service, index }: { service: Service; index: number }) {
   const [isRevealed, setIsRevealed] = useState(false);
@@ -118,15 +62,18 @@ function ServiceCard({ service, index }: { service: Service; index: number }) {
           </div>
         )}
 
-        {!service.image && service.icon && (
-          <div className="relative -mx-8 -mt-8 mb-6 flex h-40 items-center justify-center bg-gradient-to-br from-navy to-navy-light">
-            <service.icon strokeWidth={1.2} className="h-16 w-16 text-gold" />
+        {!service.image && service.icon && icons[service.icon as keyof typeof icons] && (
+          <div className="relative -mx-8 -mt-8 mb-6 flex h-40 items-center justify-center bg-gradient-to-br from-forest to-forest-light">
+            {(() => {
+              const Icon = icons[service.icon as keyof typeof icons];
+              return <Icon strokeWidth={1.2} className="h-16 w-16 text-gold" />;
+            })()}
           </div>
         )}
 
         <CardItem
           translateZ={60}
-          className="relative mb-4 flex h-10 w-10 items-center justify-center rounded-xl border border-gold/40 bg-gold/10 text-lg font-semibold text-navy"
+          className="relative mb-4 flex h-10 w-10 items-center justify-center rounded-xl border border-gold/40 bg-gold/10 text-lg font-semibold text-forest"
         >
           {index + 1}
         </CardItem>
@@ -139,7 +86,7 @@ function ServiceCard({ service, index }: { service: Service; index: number }) {
 
         {service.info && (
           <div
-            className={`absolute inset-0 z-20 flex translate-y-4 flex-col rounded-3xl bg-navy p-6 text-white opacity-0 transition duration-300 ease-out group-hover:translate-y-0 group-hover:opacity-100 ${
+            className={`absolute inset-0 z-20 flex translate-y-4 flex-col rounded-3xl bg-forest p-6 text-white opacity-0 transition duration-300 ease-out group-hover:translate-y-0 group-hover:opacity-100 ${
               isRevealed ? "translate-y-0 opacity-100" : ""
             }`}
           >
@@ -164,7 +111,7 @@ function ServiceCard({ service, index }: { service: Service; index: number }) {
   );
 }
 
-export default function Services() {
+export default function Services({ services }: { services: Service[] }) {
   return (
     <section id="services" className="relative bg-neutral-50 py-24 text-neutral-900">
       <div className="mx-auto max-w-6xl px-6">

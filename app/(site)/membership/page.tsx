@@ -6,7 +6,7 @@ import { motion } from "framer-motion";
 import { emptyMembershipForm, type MembershipFormData } from "@/lib/membership";
 
 const inputClass =
-  "w-full rounded-lg border border-black/10 bg-white px-4 py-2.5 text-neutral-900 placeholder:text-neutral-400 focus:border-navy focus:outline-none focus:ring-2 focus:ring-navy/20";
+  "w-full rounded-lg border border-black/10 bg-white px-4 py-2.5 text-neutral-900 placeholder:text-neutral-400 focus:border-forest focus:outline-none focus:ring-2 focus:ring-forest/20";
 const labelClass = "mb-1.5 block text-sm font-medium text-neutral-700";
 
 function Field({
@@ -80,7 +80,7 @@ export default function MembershipPage() {
             </p>
             <Link
               href="/"
-              className="inline-block rounded-lg bg-navy px-8 py-3 text-white shadow-[0_0_30px_rgba(12,45,82,0.35)] transition hover:bg-navy-dark"
+              className="inline-block rounded-lg bg-forest px-8 py-3 text-white shadow-[0_0_30px_rgba(27,67,50,0.35)] transition hover:bg-forest-dark"
             >
               Back to home
             </Link>
@@ -94,7 +94,7 @@ export default function MembershipPage() {
     <main className="relative overflow-hidden bg-neutral-50 py-32 text-neutral-900">
       <div className="absolute inset-0 bg-grid-pattern" />
       <div className="relative mx-auto max-w-3xl px-6">
-        <Link href="/" className="mb-6 inline-block text-sm text-navy hover:underline">
+        <Link href="/" className="mb-6 inline-block text-sm text-forest hover:underline">
           &larr; Back to home
         </Link>
 
@@ -364,7 +364,7 @@ export default function MembershipPage() {
             disabled={status === "submitting"}
             whileHover={{ scale: status === "submitting" ? 1 : 1.05 }}
             whileTap={{ scale: status === "submitting" ? 1 : 0.95 }}
-            className="w-full rounded-lg bg-navy px-8 py-3 text-white shadow-[0_0_30px_rgba(12,45,82,0.35)] transition hover:bg-navy-dark disabled:cursor-not-allowed disabled:opacity-60 sm:w-auto"
+            className="w-full rounded-lg bg-forest px-8 py-3 text-white shadow-[0_0_30px_rgba(27,67,50,0.35)] transition hover:bg-forest-dark disabled:cursor-not-allowed disabled:opacity-60 sm:w-auto"
           >
             {status === "submitting" ? "Submitting..." : "Submit Application"}
           </motion.button>

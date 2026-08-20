@@ -3,18 +3,18 @@
 :root {
   --background: #ffffff;
   --foreground: #171717;
-  --navy: #0c2d52;
-  --navy-light: #163f6e;
-  --navy-dark: #081f3a;
+  --forest: #1b4332;
+  --forest-light: #2d6a4f;
+  --forest-dark: #0f2a1e;
   --gold: #c99a3b;
 }
 
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --color-navy: var(--navy);
-  --color-navy-light: var(--navy-light);
-  --color-navy-dark: var(--navy-dark);
+  --color-forest: var(--forest);
+  --color-forest-light: var(--forest-light);
+  --color-forest-dark: var(--forest-dark);
   --color-gold: var(--gold);
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
