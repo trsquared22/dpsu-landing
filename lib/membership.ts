@@ -13,10 +13,12 @@ export interface MembershipFormData {
   email: string;
   occupation: string;
   membershipSignature: string;
+  paymentMethod: "salary_deduction" | "over_the_counter" | "";
   ministry: string;
   placeOfWork: string;
   accountingOfficer: string;
   deductionStartMonth: string;
+  firstPaymentDate: string;
   witnessName: string;
   agreeTerms: boolean;
   agreeDeduction: boolean;
@@ -37,10 +39,12 @@ export const emptyMembershipForm: MembershipFormData = {
   email: "",
   occupation: "",
   membershipSignature: "",
+  paymentMethod: "",
   ministry: "",
   placeOfWork: "",
   accountingOfficer: "",
   deductionStartMonth: "",
+  firstPaymentDate: "",
   witnessName: "",
   agreeTerms: false,
   agreeDeduction: false,
@@ -55,9 +59,6 @@ const requiredStringFields: (keyof MembershipFormData)[] = [
   "email",
   "occupation",
   "membershipSignature",
-  "ministry",
-  "placeOfWork",
-  "deductionStartMonth",
 ];
 
 export function validateMembershipForm(data: MembershipFormData): string | null {
@@ -73,8 +74,18 @@ export function validateMembershipForm(data: MembershipFormData): string | null 
   if (!data.agreeTerms) {
     return "You must agree to the membership rules and regulations.";
   }
-  if (!data.agreeDeduction) {
-    return "You must agree to the salary deduction authorization terms.";
+  if (data.paymentMethod !== "salary_deduction" && data.paymentMethod !== "over_the_counter") {
+    return "Please select a subscription payment method.";
+  }
+  if (data.paymentMethod === "salary_deduction") {
+    if (!data.ministry.trim()) return "Missing required field: ministry";
+    if (!data.placeOfWork.trim()) return "Missing required field: placeOfWork";
+    if (!data.deductionStartMonth.trim()) return "Missing required field: deductionStartMonth";
+    if (!data.agreeDeduction) {
+      return "You must agree to the salary deduction authorization terms.";
+    }
+  } else {
+    if (!data.firstPaymentDate.trim()) return "Missing required field: firstPaymentDate";
   }
   return null;
 }

@@ -103,7 +103,7 @@ export default function MembershipPage() {
 
         <h1 className="mb-3 text-4xl font-bold md:text-5xl">Application for Membership</h1>
         <p className="mb-12 text-lg text-neutral-600">
-          Join the Dominica Public Service Union and authorize your monthly subscription deduction in one step.
+          Join the Dominica Public Service Union and set up your monthly subscription payment in one step.
         </p>
 
         <form onSubmit={handleSubmit} className="space-y-10">
@@ -277,83 +277,136 @@ export default function MembershipPage() {
             </Field>
           </section>
 
-          {/* Salary Deduction Authorization */}
+          {/* Subscription Payment Method */}
           <section className="rounded-2xl border border-black/10 bg-white p-8 shadow-sm">
-            <h2 className="mb-6 text-xl font-semibold">Salary Deduction Authorization</h2>
+            <h2 className="mb-6 text-xl font-semibold">Subscription Payment Method</h2>
 
-            <div className="mb-4 grid gap-4 sm:grid-cols-2">
-              <Field label="Ministry">
+            <fieldset className="mb-6 flex flex-col gap-3 sm:flex-row sm:gap-6">
+              <legend className={labelClass}>How will you pay your subscription?</legend>
+              <label className="flex items-center gap-2 text-sm text-neutral-700">
                 <input
-                  className={inputClass}
-                  name="ministry"
-                  value={formData.ministry}
+                  type="radio"
+                  name="paymentMethod"
+                  value="salary_deduction"
+                  checked={formData.paymentMethod === "salary_deduction"}
                   onChange={handleChange}
                   required
                 />
-              </Field>
-              <Field label="Place of work">
+                Salary deduction
+              </label>
+              <label className="flex items-center gap-2 text-sm text-neutral-700">
                 <input
-                  className={inputClass}
-                  name="placeOfWork"
-                  value={formData.placeOfWork}
+                  type="radio"
+                  name="paymentMethod"
+                  value="over_the_counter"
+                  checked={formData.paymentMethod === "over_the_counter"}
                   onChange={handleChange}
                   required
                 />
-              </Field>
-            </div>
+                Over the counter subscription
+              </label>
+            </fieldset>
 
-            <Field label="To: The Votes Clerk / Accounting Officer" className="mb-4">
-              <input
-                className={inputClass}
-                name="accountingOfficer"
-                value={formData.accountingOfficer}
-                onChange={handleChange}
-                placeholder="Department or officer name (optional)"
-              />
-            </Field>
+            {formData.paymentMethod === "salary_deduction" && (
+              <>
+                <div className="mb-4 grid gap-4 sm:grid-cols-2">
+                  <Field label="Ministry">
+                    <input
+                      className={inputClass}
+                      name="ministry"
+                      value={formData.ministry}
+                      onChange={handleChange}
+                      required
+                    />
+                  </Field>
+                  <Field label="Place of work">
+                    <input
+                      className={inputClass}
+                      name="placeOfWork"
+                      value={formData.placeOfWork}
+                      onChange={handleChange}
+                      required
+                    />
+                  </Field>
+                </div>
 
-            <p className="mb-4 text-sm text-neutral-600">
-              I hereby authorize you to deduct the sum of twenty-five dollars ($25.00) or any amount that may be
-              decided
-              from time to time by the general membership, from my salary beginning the month below and every month
-              thereafter to be paid to the Dominica Public Service Union as subscription fees.
-            </p>
+                <Field label="To: The Votes Clerk / Accounting Officer" className="mb-4">
+                  <input
+                    className={inputClass}
+                    name="accountingOfficer"
+                    value={formData.accountingOfficer}
+                    onChange={handleChange}
+                    placeholder="Department or officer name (optional)"
+                  />
+                </Field>
 
-            <Field label="Deduction starts (month/year)" className="mb-4">
-              <input
-                type="month"
-                className={inputClass}
-                name="deductionStartMonth"
-                value={formData.deductionStartMonth}
-                onChange={handleChange}
-                required
-              />
-            </Field>
+                <p className="mb-4 text-sm text-neutral-600">
+                  I hereby authorize you to deduct the sum of twenty-five dollars ($25.00) or any amount that may be
+                  decided
+                  from time to time by the general membership, from my salary beginning the month below and every
+                  month thereafter to be paid to the Dominica Public Service Union as subscription fees.
+                </p>
 
-            <p className="mb-4 text-sm text-neutral-600">
-              I agree to notify the Executive Committee in writing of my intention to stop deductions.
-            </p>
+                <Field label="Deduction starts (month/year)" className="mb-4">
+                  <input
+                    type="month"
+                    className={inputClass}
+                    name="deductionStartMonth"
+                    value={formData.deductionStartMonth}
+                    onChange={handleChange}
+                    required
+                  />
+                </Field>
 
-            <label className="mb-6 flex items-start gap-2 text-sm text-neutral-700">
-              <input
-                type="checkbox"
-                name="agreeDeduction"
-                checked={formData.agreeDeduction}
-                onChange={handleChange}
-                className="mt-1"
-                required
-              />
-              I agree to the statement above.
-            </label>
+                <p className="mb-4 text-sm text-neutral-600">
+                  I agree to notify the Executive Committee in writing of my intention to stop deductions.
+                </p>
 
-            <Field label="Witness full name (optional)">
-              <input
-                className={inputClass}
-                name="witnessName"
-                value={formData.witnessName}
-                onChange={handleChange}
-              />
-            </Field>
+                <label className="mb-6 flex items-start gap-2 text-sm text-neutral-700">
+                  <input
+                    type="checkbox"
+                    name="agreeDeduction"
+                    checked={formData.agreeDeduction}
+                    onChange={handleChange}
+                    className="mt-1"
+                    required
+                  />
+                  I agree to the statement above.
+                </label>
+
+                <Field label="Witness full name (optional)">
+                  <input
+                    className={inputClass}
+                    name="witnessName"
+                    value={formData.witnessName}
+                    onChange={handleChange}
+                  />
+                </Field>
+              </>
+            )}
+
+            {formData.paymentMethod === "over_the_counter" && (
+              <div className="grid gap-4 sm:grid-cols-2">
+                <Field label="1st payment date">
+                  <input
+                    type="date"
+                    className={inputClass}
+                    name="firstPaymentDate"
+                    value={formData.firstPaymentDate}
+                    onChange={handleChange}
+                    required
+                  />
+                </Field>
+                <Field label="Witness full name (optional)">
+                  <input
+                    className={inputClass}
+                    name="witnessName"
+                    value={formData.witnessName}
+                    onChange={handleChange}
+                  />
+                </Field>
+              </div>
+            )}
           </section>
 
           <motion.button

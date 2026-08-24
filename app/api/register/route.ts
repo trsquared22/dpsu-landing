@@ -16,6 +16,7 @@ function row(label: string, value: string): string {
 
 function buildInternalEmailHtml(data: MembershipFormData): string {
   const address = [data.addressLine1, data.addressLine2, data.addressLine3].filter(Boolean).join(", ");
+  const isSalaryDeduction = data.paymentMethod === "salary_deduction";
   return `
     <div style="font-family:Arial,Helvetica,sans-serif;color:#171717;">
       <h2 style="color:#2563eb;">New DPSU Membership Application</h2>
@@ -31,12 +32,19 @@ function buildInternalEmailHtml(data: MembershipFormData): string {
         ${row("Occupation", data.occupation)}
         ${row("Membership signature", data.membershipSignature)}
       </table>
-      <h3 style="color:#2563eb;margin-top:24px;">Salary Deduction Authorization</h3>
+      <h3 style="color:#2563eb;margin-top:24px;">Subscription Payment</h3>
       <table>
-        ${row("Ministry", data.ministry)}
-        ${row("Place of work", data.placeOfWork)}
-        ${row("Accounting officer / dept.", data.accountingOfficer)}
-        ${row("Deduction starts", data.deductionStartMonth)}
+        ${row("Payment method", isSalaryDeduction ? "Salary deduction" : "Over the counter")}
+        ${
+          isSalaryDeduction
+            ? `
+              ${row("Ministry", data.ministry)}
+              ${row("Place of work", data.placeOfWork)}
+              ${row("Accounting officer / dept.", data.accountingOfficer)}
+              ${row("Deduction starts", data.deductionStartMonth)}
+            `
+            : row("1st payment date", data.firstPaymentDate)
+        }
         ${row("Witness", data.witnessName)}
       </table>
       <p style="margin-top:24px;color:#525252;font-size:14px;">Submitted ${new Date().toLocaleString("en-US", { timeZone: "America/Dominica" })} (Atlantic/Dominica time).</p>
