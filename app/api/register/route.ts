@@ -1,4 +1,4 @@
-import { Resend } from "resend";
+import { isMailerConfigured, sendEmail } from "@/lib/mailer";
 import { fullName, validateMembershipForm, type MembershipFormData } from "@/lib/membership";
 
 function escapeHtml(value: string): string {
@@ -69,11 +69,12 @@ export async function POST(request: Request) {
     return Response.json({ ok: false, error: validationError }, { status: 400 });
   }
 
-  const apiKey = process.env.RESEND_API_KEY;
-  const fromEmail = process.env.RESEND_FROM_EMAIL || "DPSU Membership <onboarding@resend.dev>";
-  const notificationEmail = process.env.DPSU_NOTIFICATION_EMAIL;
+  const notificationEmails = (process.env.DPSU_NOTIFICATION_EMAIL ?? "")
+    .split(",")
+    .map((email) => email.trim())
+    .filter(Boolean);
 
-  if (!apiKey || !notificationEmail) {
+  if (!isMailerConfigured() || notificationEmails.length === 0) {
     console.error("Membership application received but email is not configured:", data);
     return Response.json(
       { ok: false, error: "Email sending is not configured on the server yet." },
@@ -81,17 +82,13 @@ export async function POST(request: Request) {
     );
   }
 
-  const resend = new Resend(apiKey);
-
   const [internalResult, applicantResult] = await Promise.allSettled([
-    resend.emails.send({
-      from: fromEmail,
-      to: notificationEmail,
+    sendEmail({
+      to: notificationEmails,
       subject: `New DPSU Membership Application: ${fullName(data)}`,
       html: buildInternalEmailHtml(data),
     }),
-    resend.emails.send({
-      from: fromEmail,
+    sendEmail({
       to: data.email,
       subject: "Your DPSU Membership Application Has Been Received",
       html: buildApplicantEmailHtml(data),
