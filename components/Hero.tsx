@@ -26,7 +26,7 @@ export default function Hero() {
             Investing in Ourselves, Organizing for Workers&rsquo; Rights and Benefits
           </h1>
           <p className="mx-auto mt-6 max-w-xl text-lg text-neutral-600 md:mx-0 md:text-xl">
-            Serving and protecting public servants with integrity, unity, and vision.
+            Serving and protecting public officers with integrity, unity, and vision.
           </p>
           <div className="mt-10 flex flex-wrap items-center justify-center gap-4 md:justify-start">
             <motion.a

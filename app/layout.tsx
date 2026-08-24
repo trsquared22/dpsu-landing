@@ -15,7 +15,7 @@ const geistMono = Geist_Mono({
 export const metadata: Metadata = {
   title: "Dominica Public Service Union (DPSU)",
   description:
-    "The Dominica Public Service Union (DPSU) — investing in ourselves, organizing for workers' rights and benefits. Serving and protecting public servants since 1961.",
+    "The Dominica Public Service Union (DPSU) — investing in ourselves, organizing for workers' rights and benefits. Serving and protecting public officers since 1961.",
 };
 
 export default function RootLayout({

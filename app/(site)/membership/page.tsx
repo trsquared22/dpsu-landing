@@ -4,6 +4,7 @@ import { useState, type ChangeEvent, type FormEvent } from "react";
 import Link from "next/link";
 import { motion } from "framer-motion";
 import { emptyMembershipForm, type MembershipFormData } from "@/lib/membership";
+import { Toast, type ToastData } from "@/components/Toast";
 
 const inputClass =
   "w-full rounded-lg border border-black/10 bg-white px-4 py-2.5 text-neutral-900 placeholder:text-neutral-400 focus:border-forest focus:outline-none focus:ring-2 focus:ring-forest/20";
@@ -29,7 +30,7 @@ function Field({
 export default function MembershipPage() {
   const [formData, setFormData] = useState<MembershipFormData>(emptyMembershipForm);
   const [status, setStatus] = useState<"idle" | "submitting" | "success" | "error">("idle");
-  const [errorMessage, setErrorMessage] = useState("");
+  const [toast, setToast] = useState<ToastData | null>(null);
 
   function handleChange(e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) {
     const { name, value, type } = e.target;
@@ -43,7 +44,6 @@ export default function MembershipPage() {
   async function handleSubmit(e: FormEvent) {
     e.preventDefault();
     setStatus("submitting");
-    setErrorMessage("");
 
     try {
       const res = await fetch("/api/register", {
@@ -58,7 +58,10 @@ export default function MembershipPage() {
       setStatus("success");
     } catch (err) {
       setStatus("error");
-      setErrorMessage(err instanceof Error ? err.message : "Something went wrong. Please try again.");
+      setToast({
+        type: "error",
+        message: err instanceof Error ? err.message : "Something went wrong. Please try again.",
+      });
     }
   }
 
@@ -353,12 +356,6 @@ export default function MembershipPage() {
             </Field>
           </section>
 
-          {status === "error" && (
-            <div className="rounded-lg border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700">
-              {errorMessage}
-            </div>
-          )}
-
           <motion.button
             type="submit"
             disabled={status === "submitting"}
@@ -370,6 +367,7 @@ export default function MembershipPage() {
           </motion.button>
         </form>
       </div>
+      <Toast toast={toast} onDismiss={() => setToast(null)} />
     </main>
   );
 }
