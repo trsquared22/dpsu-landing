@@ -36,10 +36,12 @@ body {
   -webkit-mask-image: radial-gradient(ellipse 80% 60% at 50% 0%, black 40%, transparent 100%);
 }
 
-/* Infinite horizontal marquee used by the News/testimonial cards */
+/* Infinite horizontal marquee used by the News/testimonial cards.
+   The card track uses `gap-6` (1.5rem); the offset here must be half of
+   that gap or the loop visibly jumps at the seam between the two copies. */
 @keyframes marquee-scroll {
   to {
-    transform: translateX(calc(-50% - 0.5rem));
+    transform: translateX(calc(-50% - 0.75rem));
   }
 }
 

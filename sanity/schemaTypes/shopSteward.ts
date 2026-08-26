@@ -1,27 +1,30 @@
 import { defineField, defineType } from "sanity";
 
 export default defineType({
-  name: "membershipStat",
-  title: "Membership Stat",
+  name: "shopSteward",
+  title: "Shop Steward",
   type: "document",
   fields: [
     defineField({
       name: "entity",
-      title: "Company / Entity Name",
+      title: "Company / Establishment Name",
       type: "string",
       validation: (rule) => rule.required(),
     }),
     defineField({
-      name: "members",
-      title: "Active Members",
-      type: "number",
-      validation: (rule) => rule.required().min(0).integer(),
+      name: "stewardNames",
+      title: "Shop Steward Name(s)",
+      type: "text",
+      rows: 3,
+      description:
+        "Name(s) of the shop steward(s) at this establishment. Separate multiple names with a comma or a new line.",
+      validation: (rule) => rule.required(),
     }),
     defineField({
       name: "order",
       title: "Order",
       type: "number",
-      description: "Controls row order in the membership table (lower numbers first).",
+      description: "Controls row order in the shop steward table (lower numbers first).",
       validation: (rule) => rule.integer(),
     }),
   ],
@@ -33,9 +36,6 @@ export default defineType({
     },
   ],
   preview: {
-    select: { title: "entity", subtitle: "members" },
-    prepare({ title, subtitle }) {
-      return { title, subtitle: subtitle != null ? `${subtitle} members` : undefined };
-    },
+    select: { title: "entity", subtitle: "stewardNames" },
   },
 });

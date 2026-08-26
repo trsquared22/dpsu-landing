@@ -19,9 +19,9 @@ export interface ServiceData {
   infoOutro?: string;
 }
 
-export interface MembershipStatData {
-  name: string;
-  members: number;
+export interface ShopStewardData {
+  entity: string;
+  stewardNames: string;
 }
 
 export interface AboutPillarData {
@@ -60,7 +60,7 @@ const servicesQuery = /* groq */ `*[_type == "service"] | order(order asc, _crea
   title, description, image, imagePosition, icon, info, infoList, infoOutro
 }`;
 
-const membershipStatsQuery = /* groq */ `*[_type == "membershipStat"] | order(order asc, _createdAt asc){ entity, members }`;
+const shopStewardsQuery = /* groq */ `*[_type == "shopSteward"] | order(order asc, _createdAt asc){ entity, stewardNames }`;
 
 const siteSettingsQuery = /* groq */ `*[_type == "siteSettings"][0]{
   contactEmail, contactPhone, facebookUrl,
@@ -90,13 +90,8 @@ export async function getServices(): Promise<ServiceData[]> {
   }));
 }
 
-export async function getMembershipStats(): Promise<MembershipStatData[]> {
-  const stats = await client.fetch<{ entity: string; members: number }[]>(
-    membershipStatsQuery,
-    {},
-    FETCH_OPTIONS
-  );
-  return stats.map((stat) => ({ name: stat.entity, members: stat.members }));
+export async function getShopStewards(): Promise<ShopStewardData[]> {
+  return client.fetch<ShopStewardData[]>(shopStewardsQuery, {}, FETCH_OPTIONS);
 }
 
 export async function getSiteSettings(): Promise<SiteSettingsData> {

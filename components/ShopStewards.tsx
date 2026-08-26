@@ -2,14 +2,12 @@
 
 import { motion } from "framer-motion";
 
-interface MembershipEntry {
-  name: string;
-  members: number;
+interface ShopStewardEntry {
+  entity: string;
+  stewardNames: string;
 }
 
-export default function Stats({ memberships }: { memberships: MembershipEntry[] }) {
-  const total = memberships.reduce((sum, entry) => sum + entry.members, 0);
-
+export default function ShopStewards({ stewards }: { stewards: ShopStewardEntry[] }) {
   return (
     <section className="relative overflow-hidden bg-forest py-20 text-white">
       <div className="absolute inset-0 bg-grid-pattern opacity-10" />
@@ -21,10 +19,10 @@ export default function Stats({ memberships }: { memberships: MembershipEntry[] 
           transition={{ duration: 0.8 }}
           className="mb-2 text-center text-4xl font-bold"
         >
-          Who We Represent
+          Our Shop Stewards
         </motion.h2>
         <p className="mb-10 text-center text-white/70">
-          Active DPSU membership across government establishments and partner organizations.
+          Your DPSU shop stewards across government establishments and Other Organizations.
         </p>
 
         <motion.div
@@ -37,35 +35,27 @@ export default function Stats({ memberships }: { memberships: MembershipEntry[] 
           <table className="w-full text-left">
             <thead>
               <tr className="border-b border-white/10 text-sm uppercase tracking-wide text-white/60">
-                <th className="px-6 py-4 font-medium">Company / Entity</th>
-                <th className="px-6 py-4 text-right font-medium">Active Members</th>
+                <th className="px-6 py-4 font-medium">Company / Establishment</th>
+                <th className="px-6 py-4 font-medium">Shop Steward(s)</th>
               </tr>
             </thead>
             <tbody>
-              {memberships.map((entry, i) => (
+              {stewards.map((entry, i) => (
                 <motion.tr
-                  key={entry.name}
+                  key={entry.entity}
                   initial={{ opacity: 0, x: -10 }}
                   whileInView={{ opacity: 1, x: 0 }}
                   viewport={{ once: true }}
                   transition={{ duration: 0.5, delay: 0.05 * i }}
                   className="border-b border-white/5 last:border-0"
                 >
-                  <td className="px-6 py-4 text-white/90">{entry.name}</td>
-                  <td className="px-6 py-4 text-right text-lg font-semibold text-gold">
-                    {entry.members.toLocaleString()}
+                  <td className="px-6 py-4 text-white/90">{entry.entity}</td>
+                  <td className="px-6 py-4 text-gold">
+                    {entry.stewardNames.split(/\r?\n|,/).map((name) => name.trim()).filter(Boolean).join(", ")}
                   </td>
                 </motion.tr>
               ))}
             </tbody>
-            <tfoot>
-              <tr className="border-t border-white/10 bg-white/5">
-                <td className="px-6 py-4 font-semibold text-white">Total</td>
-                <td className="px-6 py-4 text-right text-lg font-bold text-gold">
-                  {total.toLocaleString()}
-                </td>
-              </tr>
-            </tfoot>
           </table>
         </motion.div>
       </div>
