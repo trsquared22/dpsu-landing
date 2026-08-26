@@ -24,6 +24,13 @@ export interface ShopStewardData {
   stewardNames: string;
 }
 
+export interface CarouselSlideData {
+  src: string;
+  alt: string;
+  caption?: string;
+  fit: "cover" | "contain";
+}
+
 export interface AboutPillarData {
   title: string;
   desc: string;
@@ -50,9 +57,20 @@ interface RawService {
   infoOutro?: string;
 }
 
-// Fall back to Next's default fetch cache; the /api/revalidate webhook
-// invalidates it on-demand, this is just a safety net if a webhook is missed.
-const FETCH_OPTIONS = { next: { revalidate: 3600 } } as const;
+interface RawCarouselSlide {
+  image: SanityImageSource;
+  caption?: string;
+  alt?: string;
+  showFullImage?: boolean;
+}
+
+// perspective: "published" pins every query to published content only - without
+// it, this API version can silently return an empty result set for documents
+// that have never been opened as a draft in Studio (seen with freshly
+// API-created carouselSlide docs). Fall back to Next's default fetch cache;
+// the /api/revalidate webhook invalidates it on-demand, this is just a safety
+// net if a webhook is missed.
+const FETCH_OPTIONS = { next: { revalidate: 3600 }, perspective: "published" } as const;
 
 const newsPostsQuery = /* groq */ `*[_type == "newsPost"] | order(date desc){ title, description }`;
 
@@ -61,6 +79,10 @@ const servicesQuery = /* groq */ `*[_type == "service"] | order(order asc, _crea
 }`;
 
 const shopStewardsQuery = /* groq */ `*[_type == "shopSteward"] | order(order asc, _createdAt asc){ entity, stewardNames }`;
+
+const carouselSlidesQuery = /* groq */ `*[_type == "carouselSlide"] | order(order asc, _createdAt asc){
+  image, caption, alt, showFullImage
+}`;
 
 const siteSettingsQuery = /* groq */ `*[_type == "siteSettings"][0]{
   contactEmail, contactPhone, facebookUrl,
@@ -92,6 +114,18 @@ export async function getServices(): Promise<ServiceData[]> {
 
 export async function getShopStewards(): Promise<ShopStewardData[]> {
   return client.fetch<ShopStewardData[]>(shopStewardsQuery, {}, FETCH_OPTIONS);
+}
+
+export async function getCarouselSlides(): Promise<CarouselSlideData[]> {
+  const slides = await client.fetch<RawCarouselSlide[]>(carouselSlidesQuery, {}, FETCH_OPTIONS);
+  return slides.map((slide) => ({
+    src: slide.showFullImage
+      ? urlForImage(slide.image).width(1600).url()
+      : urlForImage(slide.image).width(1600).height(900).url(),
+    alt: slide.alt || slide.caption || "DPSU carousel image",
+    caption: slide.caption,
+    fit: slide.showFullImage ? "contain" : "cover",
+  }));
 }
 
 export async function getSiteSettings(): Promise<SiteSettingsData> {

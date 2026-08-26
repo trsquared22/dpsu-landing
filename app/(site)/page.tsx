@@ -5,20 +5,27 @@ import ShopStewards from "@/components/ShopStewards";
 import Services from "@/components/Services";
 import News from "@/components/News";
 import Contact from "@/components/Contact";
-import { getNewsPosts, getServices, getShopStewards, getSiteSettings } from "@/sanity/lib/queries";
+import {
+  getCarouselSlides,
+  getNewsPosts,
+  getServices,
+  getShopStewards,
+  getSiteSettings,
+} from "@/sanity/lib/queries";
 
 export default async function Home() {
-  const [services, newsPosts, shopStewards, siteSettings] = await Promise.all([
+  const [services, newsPosts, shopStewards, carouselSlides, siteSettings] = await Promise.all([
     getServices(),
     getNewsPosts(),
     getShopStewards(),
+    getCarouselSlides(),
     getSiteSettings(),
   ]);
 
   return (
     <main className="overflow-x-hidden">
       <Hero />
-      <PhotoCarousel />
+      <PhotoCarousel slides={carouselSlides} />
       <About
         themeLabel={siteSettings.aboutThemeLabel}
         themeText={siteSettings.aboutThemeText}
