@@ -58,7 +58,7 @@ function buildApplicantEmailHtml(data: MembershipFormData): string {
       <h2 style="color:#2563eb;">Thank you for applying, ${escapeHtml(data.firstName)}!</h2>
       <p>We've received your application for membership with the Dominica Public Service Union (DPSU), along with your salary deduction authorization.</p>
       <p>A member of our team will review your application and follow up if anything further is needed.</p>
-      <p style="margin-top:24px;color:#525252;font-size:14px;">If you did not submit this application, please contact us at dominicapsu@dpsu.dm.</p>
+      <p style="margin-top:24px;color:#525252;font-size:14px;">If you did not submit this application, please contact us at dominicapsu@gmail.com.</p>
       <p style="margin-top:24px;">&mdash; Dominica Public Service Union</p>
     </div>
   `;
