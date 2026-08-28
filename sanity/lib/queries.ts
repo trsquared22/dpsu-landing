@@ -23,11 +23,13 @@ export interface StewardData {
   name: string;
   phone?: string;
   email?: string;
+  department?: string;
 }
 
 export interface ShopStewardData {
   entity: string;
   stewards: StewardData[];
+  subOptions?: string[];
 }
 
 export interface EstablishmentData {
@@ -90,7 +92,7 @@ const servicesQuery = /* groq */ `*[_type == "service"] | order(order asc, _crea
 }`;
 
 const shopStewardsQuery = /* groq */ `*[_type == "shopSteward"] | order(order asc, _createdAt asc){
-  entity, stewards[]{ name, phone, email }
+  entity, stewards[]{ name, phone, email, department }, subOptions
 }`;
 
 const establishmentsQuery = /* groq */ `*[_type == "shopSteward"] | order(order asc, _createdAt asc){ entity, subOptions }`;
