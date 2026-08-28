@@ -78,10 +78,10 @@ interface RawCarouselSlide {
 // perspective: "published" pins every query to published content only - without
 // it, this API version can silently return an empty result set for documents
 // that have never been opened as a draft in Studio (seen with freshly
-// API-created carouselSlide docs). Fall back to Next's default fetch cache;
-// the /api/revalidate webhook invalidates it on-demand, this is just a safety
-// net if a webhook is missed.
-const FETCH_OPTIONS = { next: { revalidate: 3600 }, perspective: "published" } as const;
+// API-created carouselSlide docs). The /api/revalidate webhook is the primary
+// freshness mechanism (near-instant on publish); this revalidate window is
+// just a safety net in case that webhook is ever missed.
+const FETCH_OPTIONS = { next: { revalidate: 60 }, perspective: "published" } as const;
 
 const newsPostsQuery = /* groq */ `*[_type == "newsPost"] | order(date desc){ title, description }`;
 
