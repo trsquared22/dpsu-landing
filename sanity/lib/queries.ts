@@ -19,9 +19,20 @@ export interface ServiceData {
   infoOutro?: string;
 }
 
+export interface StewardData {
+  name: string;
+  phone?: string;
+  email?: string;
+}
+
 export interface ShopStewardData {
   entity: string;
-  stewardNames: string;
+  stewards: StewardData[];
+}
+
+export interface EstablishmentData {
+  entity: string;
+  subOptions?: string[];
 }
 
 export interface CarouselSlideData {
@@ -78,7 +89,11 @@ const servicesQuery = /* groq */ `*[_type == "service"] | order(order asc, _crea
   title, description, image, imagePosition, icon, info, infoList, infoOutro
 }`;
 
-const shopStewardsQuery = /* groq */ `*[_type == "shopSteward"] | order(order asc, _createdAt asc){ entity, stewardNames }`;
+const shopStewardsQuery = /* groq */ `*[_type == "shopSteward"] | order(order asc, _createdAt asc){
+  entity, stewards[]{ name, phone, email }
+}`;
+
+const establishmentsQuery = /* groq */ `*[_type == "shopSteward"] | order(order asc, _createdAt asc){ entity, subOptions }`;
 
 const carouselSlidesQuery = /* groq */ `*[_type == "carouselSlide"] | order(order asc, _createdAt asc){
   image, caption, alt, showFullImage
@@ -114,6 +129,10 @@ export async function getServices(): Promise<ServiceData[]> {
 
 export async function getShopStewards(): Promise<ShopStewardData[]> {
   return client.fetch<ShopStewardData[]>(shopStewardsQuery, {}, FETCH_OPTIONS);
+}
+
+export async function getEstablishments(): Promise<EstablishmentData[]> {
+  return client.fetch<EstablishmentData[]>(establishmentsQuery, {}, FETCH_OPTIONS);
 }
 
 export async function getCarouselSlides(): Promise<CarouselSlideData[]> {

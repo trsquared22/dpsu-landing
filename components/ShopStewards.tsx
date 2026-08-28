@@ -1,13 +1,23 @@
 "use client";
 
-import { motion } from "framer-motion";
+import { useState } from "react";
+import { AnimatePresence, motion } from "framer-motion";
+import { Mail, Phone, X } from "lucide-react";
+
+interface Steward {
+  name: string;
+  phone?: string;
+  email?: string;
+}
 
 interface ShopStewardEntry {
   entity: string;
-  stewardNames: string;
+  stewards: Steward[];
 }
 
 export default function ShopStewards({ stewards }: { stewards: ShopStewardEntry[] }) {
+  const [active, setActive] = useState<{ entity: string; steward: Steward } | null>(null);
+
   return (
     <section className="relative overflow-hidden bg-forest py-20 text-white">
       <div className="absolute inset-0 bg-grid-pattern opacity-10" />
@@ -22,7 +32,8 @@ export default function ShopStewards({ stewards }: { stewards: ShopStewardEntry[
           Our Shop Stewards
         </motion.h2>
         <p className="mb-10 text-center text-white/70">
-          Your DPSU shop stewards across government establishments and Other Organizations.
+          Your DPSU shop stewards across government establishments and Other Organizations. Click a name for
+          contact info.
         </p>
 
         <motion.div
@@ -50,8 +61,25 @@ export default function ShopStewards({ stewards }: { stewards: ShopStewardEntry[
                   className="border-b border-white/5 last:border-0"
                 >
                   <td className="px-6 py-4 text-white/90">{entry.entity}</td>
-                  <td className="px-6 py-4 text-gold">
-                    {entry.stewardNames.split(/\r?\n|,/).map((name) => name.trim()).filter(Boolean).join(", ")}
+                  <td className="px-6 py-4">
+                    {entry.stewards.length === 0 ? (
+                      <span className="text-white/40">&mdash;</span>
+                    ) : (
+                      <div className="flex flex-wrap gap-x-1 gap-y-1">
+                        {entry.stewards.map((steward, j) => (
+                          <span key={steward.name}>
+                            <button
+                              type="button"
+                              onClick={() => setActive({ entity: entry.entity, steward })}
+                              className="text-gold underline decoration-gold/40 underline-offset-2 transition hover:text-gold/80"
+                            >
+                              {steward.name}
+                            </button>
+                            {j < entry.stewards.length - 1 && <span className="text-white/40">, </span>}
+                          </span>
+                        ))}
+                      </div>
+                    )}
                   </td>
                 </motion.tr>
               ))}
@@ -59,6 +87,63 @@ export default function ShopStewards({ stewards }: { stewards: ShopStewardEntry[
           </table>
         </motion.div>
       </div>
+
+      <AnimatePresence>
+        {active && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 z-[200] flex items-center justify-center bg-black/60 px-4"
+            onClick={() => setActive(null)}
+          >
+            <motion.div
+              initial={{ opacity: 0, y: 16, scale: 0.96 }}
+              animate={{ opacity: 1, y: 0, scale: 1 }}
+              exit={{ opacity: 0, y: 16, scale: 0.96 }}
+              transition={{ duration: 0.2, ease: "easeOut" }}
+              onClick={(e) => e.stopPropagation()}
+              className="relative w-full max-w-sm rounded-2xl border border-black/10 bg-white p-6 text-neutral-900 shadow-[0_10px_40px_rgba(0,0,0,0.25)]"
+            >
+              <button
+                type="button"
+                onClick={() => setActive(null)}
+                aria-label="Close"
+                className="absolute right-4 top-4 rounded-full p-1 text-neutral-400 transition-colors hover:bg-black/5 hover:text-neutral-600"
+              >
+                <X className="h-4 w-4" />
+              </button>
+              <p className="mb-1 text-xs font-medium uppercase tracking-wide text-neutral-500">
+                {active.entity}
+              </p>
+              <h3 className="mb-4 text-lg font-semibold">{active.steward.name}</h3>
+              <div className="space-y-2 text-sm">
+                {active.steward.phone ? (
+                  <a
+                    href={`tel:${active.steward.phone}`}
+                    className="flex items-center gap-2 text-neutral-700 transition hover:text-forest"
+                  >
+                    <Phone className="h-4 w-4 shrink-0 text-forest" />
+                    {active.steward.phone}
+                  </a>
+                ) : null}
+                {active.steward.email ? (
+                  <a
+                    href={`mailto:${active.steward.email}`}
+                    className="flex items-center gap-2 text-neutral-700 transition hover:text-forest"
+                  >
+                    <Mail className="h-4 w-4 shrink-0 text-forest" />
+                    {active.steward.email}
+                  </a>
+                ) : null}
+                {!active.steward.phone && !active.steward.email && (
+                  <p className="text-neutral-500">Contact info coming soon.</p>
+                )}
+              </div>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </section>
   );
 }

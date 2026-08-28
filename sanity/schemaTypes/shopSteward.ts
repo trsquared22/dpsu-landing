@@ -1,4 +1,4 @@
-import { defineField, defineType } from "sanity";
+import { defineArrayMember, defineField, defineType } from "sanity";
 
 export default defineType({
   name: "shopSteward",
@@ -12,13 +12,36 @@ export default defineType({
       validation: (rule) => rule.required(),
     }),
     defineField({
-      name: "stewardNames",
-      title: "Shop Steward Name(s)",
-      type: "text",
-      rows: 3,
+      name: "stewards",
+      title: "Shop Stewards",
+      type: "array",
+      description: "One entry per shop steward at this establishment, with their contact info.",
+      of: [
+        defineArrayMember({
+          type: "object",
+          name: "steward",
+          fields: [
+            defineField({ name: "name", title: "Name", type: "string", validation: (rule) => rule.required() }),
+            defineField({ name: "phone", title: "Phone", type: "string" }),
+            defineField({ name: "email", title: "Email", type: "string" }),
+          ],
+          preview: {
+            select: { title: "name", phone: "phone", email: "email" },
+            prepare({ title, phone, email }) {
+              return { title, subtitle: [phone, email].filter(Boolean).join(" · ") };
+            },
+          },
+        }),
+      ],
+      validation: (rule) => rule.min(1),
+    }),
+    defineField({
+      name: "subOptions",
+      title: "Ministries / Departments (optional)",
+      type: "array",
+      of: [{ type: "string" }],
       description:
-        "Name(s) of the shop steward(s) at this establishment. Separate multiple names with a comma or a new line.",
-      validation: (rule) => rule.required(),
+        'If this establishment is a broad category (e.g. "Government Establishments"), list the specific ministries or departments here. They\'ll appear as a follow-up dropdown on the membership registration form. Leave empty for a standalone employer.',
     }),
     defineField({
       name: "order",
@@ -36,6 +59,10 @@ export default defineType({
     },
   ],
   preview: {
-    select: { title: "entity", subtitle: "stewardNames" },
+    select: { title: "entity", stewards: "stewards" },
+    prepare({ title, stewards }) {
+      const names = Array.isArray(stewards) ? stewards.map((s: { name?: string }) => s.name).filter(Boolean) : [];
+      return { title, subtitle: names.join(", ") };
+    },
   },
 });

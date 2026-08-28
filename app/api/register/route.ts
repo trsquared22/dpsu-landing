@@ -14,6 +14,14 @@ function row(label: string, value: string): string {
   return `<tr><td style="padding:4px 12px 4px 0;color:#525252;white-space:nowrap;">${label}</td><td style="padding:4px 0;font-weight:600;">${escapeHtml(value)}</td></tr>`;
 }
 
+function signatureRow(signature: string): string {
+  if (!signature) return "";
+  const cell = signature.startsWith("data:image")
+    ? `<img src="${signature}" alt="Signature" style="max-height:80px;border:1px solid #e5e5e5;border-radius:4px;padding:4px;background:#fff;" />`
+    : `<span style="font-weight:600;">${escapeHtml(signature)}</span>`;
+  return `<tr><td style="padding:4px 12px 4px 0;color:#525252;white-space:nowrap;vertical-align:top;">Membership signature</td><td style="padding:4px 0;">${cell}</td></tr>`;
+}
+
 function buildInternalEmailHtml(data: MembershipFormData): string {
   const address = [data.addressLine1, data.addressLine2, data.addressLine3].filter(Boolean).join(", ");
   const isSalaryDeduction = data.paymentMethod === "salary_deduction";
@@ -30,7 +38,7 @@ function buildInternalEmailHtml(data: MembershipFormData): string {
         ${row("Phone (cell)", data.phoneCell)}
         ${row("Email", data.email)}
         ${row("Occupation", data.occupation)}
-        ${row("Membership signature", data.membershipSignature)}
+        ${signatureRow(data.membershipSignature)}
       </table>
       <h3 style="color:#2563eb;margin-top:24px;">Subscription Payment</h3>
       <table>
@@ -38,7 +46,8 @@ function buildInternalEmailHtml(data: MembershipFormData): string {
         ${
           isSalaryDeduction
             ? `
-              ${row("Ministry", data.ministry)}
+              ${row("Company / Establishment", data.establishment)}
+              ${row("Ministry / Department", data.ministryDepartment)}
               ${row("Place of work", data.placeOfWork)}
               ${row("Accounting officer / dept.", data.accountingOfficer)}
               ${row("Deduction starts", data.deductionStartMonth)}

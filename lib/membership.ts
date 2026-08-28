@@ -14,7 +14,8 @@ export interface MembershipFormData {
   occupation: string;
   membershipSignature: string;
   paymentMethod: "salary_deduction" | "over_the_counter" | "";
-  ministry: string;
+  establishment: string;
+  ministryDepartment: string;
   placeOfWork: string;
   accountingOfficer: string;
   deductionStartMonth: string;
@@ -40,7 +41,8 @@ export const emptyMembershipForm: MembershipFormData = {
   occupation: "",
   membershipSignature: "",
   paymentMethod: "",
-  ministry: "",
+  establishment: "",
+  ministryDepartment: "",
   placeOfWork: "",
   accountingOfficer: "",
   deductionStartMonth: "",
@@ -78,7 +80,13 @@ export function validateMembershipForm(data: MembershipFormData): string | null 
     return "Please select a subscription payment method.";
   }
   if (data.paymentMethod === "salary_deduction") {
-    if (!data.ministry.trim()) return "Missing required field: ministry";
+    if (!data.establishment.trim()) return "Missing required field: establishment";
+    // Only "Government Establishments" currently has a ministry/department follow-up
+    // list in Studio - other establishments with subOptions rely on the form's
+    // required <select> to enforce this client-side.
+    if (data.establishment === "Government Establishments" && !data.ministryDepartment.trim()) {
+      return "Missing required field: ministryDepartment";
+    }
     if (!data.placeOfWork.trim()) return "Missing required field: placeOfWork";
     if (!data.deductionStartMonth.trim()) return "Missing required field: deductionStartMonth";
     if (!data.agreeDeduction) {
