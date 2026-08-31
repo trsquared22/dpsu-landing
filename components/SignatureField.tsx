@@ -27,7 +27,11 @@ export function SignatureField({
   function handleStroke() {
     const pad = sigRef.current;
     if (!pad) return;
-    onChange(pad.isEmpty() ? "" : pad.getTrimmedCanvas().toDataURL("image/png"));
+    // getTrimmedCanvas() is broken in this package's current release (throws
+    // "trim_canvas is not a function" from a bad interop import), silently
+    // dropping every signature. getCanvas() avoids that code path entirely -
+    // the only trade-off is the untrimmed canvas keeps its blank margins.
+    onChange(pad.isEmpty() ? "" : pad.getCanvas().toDataURL("image/png"));
   }
 
   function handleClear() {

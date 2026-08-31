@@ -1,5 +1,5 @@
 export interface MembershipFormData {
-  gender: "woman" | "man" | "";
+  gender: "female" | "male" | "";
   firstName: string;
   middleName: string;
   lastName: string;

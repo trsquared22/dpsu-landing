@@ -129,23 +129,23 @@ export default function MembershipForm({ establishments }: { establishments: Est
                 <input
                   type="radio"
                   name="gender"
-                  value="woman"
-                  checked={formData.gender === "woman"}
+                  value="female"
+                  checked={formData.gender === "female"}
                   onChange={handleChange}
                   required
                 />
-                Woman
+                Female
               </label>
               <label className="flex items-center gap-2 text-sm text-neutral-700">
                 <input
                   type="radio"
                   name="gender"
-                  value="man"
-                  checked={formData.gender === "man"}
+                  value="male"
+                  checked={formData.gender === "male"}
                   onChange={handleChange}
                   required
                 />
-                Man
+                Male
               </label>
             </fieldset>
 

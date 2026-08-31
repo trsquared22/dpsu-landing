@@ -1,0 +1,65 @@
+datasource db {
+  provider = "postgresql"
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+enum ApplicationStatus {
+  pending
+  active
+  inactive
+}
+
+// Mirrors MembershipFormData (lib/membership.ts) field-for-field. Nullability
+// matches validateMembershipForm's rules exactly - only fields it requires
+// unconditionally are non-null here; conditionally-required fields (e.g.
+// ministryDepartment only when establishment is "Government Establishments")
+// stay nullable since that cross-field logic lives in validateMembershipForm,
+// not in the schema.
+model MembershipApplication {
+  id                  String   @id @default(cuid())
+  gender              String?
+  firstName           String
+  middleName          String?
+  lastName             String
+  addressLine1        String
+  addressLine2        String?
+  addressLine3        String?
+  phoneHome           String?
+  phoneWork           String?
+  phoneCell           String
+  dateOfBirth         String
+  email               String
+  occupation          String
+  // May hold a typed name or a data:image/png;base64,... signature-pad export
+  // (components/SignatureField.tsx) - Text has no practical size cap either way.
+  membershipSignature String   @db.Text
+  paymentMethod       String
+  establishment       String?
+  ministryDepartment  String?
+  placeOfWork         String?
+  accountingOfficer   String?
+  deductionStartMonth String?
+  firstPaymentDate    String?
+  witnessName         String?
+  agreeTerms          Boolean
+  agreeDeduction      Boolean           @default(false)
+  // New applications (from the public form or added manually) start pending;
+  // an admin changing this to active triggers a confirmation email to the
+  // applicant (see app/admin/actions.ts).
+  status              ApplicationStatus @default(pending)
+  createdAt           DateTime          @default(now())
+  updatedAt           DateTime          @updatedAt
+
+  @@index([createdAt])
+  @@index([status])
+}
+
+model AdminUser {
+  id           String   @id @default(cuid())
+  email        String   @unique
+  passwordHash String
+  createdAt    DateTime @default(now())
+}

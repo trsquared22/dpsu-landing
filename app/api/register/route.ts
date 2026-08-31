@@ -1,5 +1,7 @@
+import { prisma } from "@/lib/db";
 import { isMailerConfigured, sendEmail } from "@/lib/mailer";
 import { fullName, validateMembershipForm, type MembershipFormData } from "@/lib/membership";
+import { toMembershipApplicationData } from "@/lib/membership-db";
 
 function escapeHtml(value: string): string {
   return value
@@ -30,7 +32,7 @@ function buildInternalEmailHtml(data: MembershipFormData): string {
       <h2 style="color:#2563eb;">New DPSU Membership Application</h2>
       <table>
         ${row("Name", fullName(data))}
-        ${row("Gender", data.gender)}
+        ${row("Gender", data.gender === "female" ? "Female" : data.gender === "male" ? "Male" : "")}
         ${row("Date of birth", data.dateOfBirth)}
         ${row("Address", address)}
         ${row("Phone (home)", data.phoneHome)}
@@ -86,17 +88,28 @@ export async function POST(request: Request) {
     return Response.json({ ok: false, error: validationError }, { status: 400 });
   }
 
+  // Persisting is the durability guarantee - this must succeed for the
+  // response to report success. Email below is best-effort: the application
+  // is already safely stored (visible in /admin/applications) regardless of
+  // whether either email actually sends.
+  try {
+    await prisma.membershipApplication.create({ data: toMembershipApplicationData(data) });
+  } catch (err) {
+    console.error("Failed to save membership application:", err, data);
+    return Response.json(
+      { ok: false, error: "Failed to save your application. Please try again shortly." },
+      { status: 500 }
+    );
+  }
+
   const notificationEmails = (process.env.DPSU_NOTIFICATION_EMAIL ?? "")
     .split(",")
     .map((email) => email.trim())
     .filter(Boolean);
 
   if (!isMailerConfigured() || notificationEmails.length === 0) {
-    console.error("Membership application received but email is not configured:", data);
-    return Response.json(
-      { ok: false, error: "Email sending is not configured on the server yet." },
-      { status: 500 }
-    );
+    console.error("Membership application saved but email is not configured:", data);
+    return Response.json({ ok: true });
   }
 
   const [internalResult, applicantResult] = await Promise.allSettled([
@@ -117,10 +130,6 @@ export async function POST(request: Request) {
   }
   if (applicantResult.status === "rejected") {
     console.error("Failed to send applicant confirmation email:", applicantResult.reason);
-  }
-
-  if (internalResult.status === "rejected" && applicantResult.status === "rejected") {
-    return Response.json({ ok: false, error: "Failed to send emails. Please try again shortly." }, { status: 502 });
   }
 
   return Response.json({ ok: true });
