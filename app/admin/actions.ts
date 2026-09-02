@@ -1,6 +1,6 @@
 "use server";
 
-import { cookies } from "next/headers";
+import { cookies, headers } from "next/headers";
 import { redirect } from "next/navigation";
 import { revalidatePath } from "next/cache";
 
@@ -8,6 +8,7 @@ import { prisma } from "@/lib/db";
 import { verifySession } from "@/lib/dal";
 import { hashPassword, verifyPassword } from "@/lib/auth/password";
 import { encryptSession, SESSION_COOKIE_NAME } from "@/lib/auth/session";
+import { checkLoginRateLimit, getClientIp, recordLoginAttempt } from "@/lib/auth/rate-limit";
 import { isMailerConfigured, sendEmail } from "@/lib/mailer";
 
 export async function login(_prevState: string | null, formData: FormData): Promise<string | null> {
@@ -18,8 +19,18 @@ export async function login(_prevState: string | null, formData: FormData): Prom
     return "Email and password are required.";
   }
 
+  const ip = getClientIp(await headers());
+
+  const lockoutMessage = await checkLoginRateLimit(email, ip);
+  if (lockoutMessage) {
+    return lockoutMessage;
+  }
+
   const admin = await prisma.adminUser.findUnique({ where: { email } });
-  if (!admin || !(await verifyPassword(password, admin.passwordHash))) {
+  const passwordValid = admin ? await verifyPassword(password, admin.passwordHash) : false;
+  await recordLoginAttempt(email, ip, passwordValid);
+
+  if (!admin || !passwordValid) {
     return "Invalid email or password.";
   }
 

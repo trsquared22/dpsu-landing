@@ -63,3 +63,18 @@ model AdminUser {
   passwordHash String
   createdAt    DateTime @default(now())
 }
+
+// One row per login attempt (success or failure), keyed by both the email
+// typed and the client IP so a lockout can't be dodged by trying many emails
+// from one IP or one email from many IPs. See lib/auth/rate-limit.ts - rows
+// older than the retention window get opportunistically cleaned up there.
+model LoginAttempt {
+  id        String   @id @default(cuid())
+  email     String
+  ip        String
+  success   Boolean
+  createdAt DateTime @default(now())
+
+  @@index([email, createdAt])
+  @@index([ip, createdAt])
+}
